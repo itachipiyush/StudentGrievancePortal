@@ -1,0 +1,94 @@
+﻿@* @{
+    Layout = "_Layout";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-4">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white text-center">
+                <h4>Institutional ERP Login</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="Login" method="post">
+                    <div class="form-group mb-3">
+                        <label class="form-label">ERP ID / Roll No</label>
+                        <input name="erpId" class="form-control" required placeholder="e.g. STU001" />
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="form-label">Password</label>
+                        <input name="password" type="password" class="form-control" required />
+                    </div>
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="text-danger mb-3">@ViewBag.Error</div>
+                    }
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> *@
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Login";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card shadow-lg border-0">
+            <div class="card-header bg-dark text-white text-center py-3">
+                <h4 class="mb-0"><i class="bi bi-shield-lock"></i> ERP Portal Access</h4>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Login" method="post">
+
+                    <label class="form-label fw-bold d-block text-center mb-3">Select Your Role</label>
+                    <div class="text-center mb-4">
+                        <div class="btn-group w-100" role="group" aria-label="Role selection">
+                            <input type="radio" class="btn-check" name="userRole" id="studentRole" value="1" checked autocomplete="off">
+                            <label class="btn btn-outline-primary py-2" for="studentRole">
+                                <i class="bi bi-person-video3"></i> Student
+                            </label>
+
+                            <input type="radio" class="btn-check" name="userRole" id="ccRole" value="2" autocomplete="off">
+                            <label class="btn btn-outline-primary py-2" for="ccRole">
+                                <i class="bi bi-person-badge"></i> Coordinator
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label fw-bold">ERP ID / Roll No</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-person"></i></span>
+                            <input name="erpId" class="form-control" required placeholder="e.g. STU001 or CC001" />
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label class="form-label fw-bold">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-key"></i></span>
+                            <input name="password" type="password" class="form-control" required placeholder="••••••••" />
+                        </div>
+                    </div>
+
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger py-2 small mb-3">
+                            <i class="bi bi-exclamation-triangle-fill"></i> @ViewBag.Error
+                        </div>
+                    }
+
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-bold shadow-sm">
+                        Sign In to Portal
+                    </button>
+                </form>
+            </div>
+            <div class="card-footer bg-light text-center small text-muted border-0">
+                Authorized Access Only &copy; 2026
+            </div>
+        </div>
+    </div>
+</div>

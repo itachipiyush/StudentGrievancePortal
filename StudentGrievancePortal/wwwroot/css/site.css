@@ -1,0 +1,293 @@
+/*html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}*/
+
+
+/* Custom ERP Theme Colors */
+/*:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+}
+
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.card {
+    transition: transform 0.2s;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+.border-left-primary {
+    border-left: 5px solid var(--primary-color) !important;
+}
+
+.navbar-brand {
+    letter-spacing: -0.5px;
+}*/
+
+/* Ensure the main content never gets hidden behind the footer */
+/*body {
+    margin-bottom: 70px;*/ /* Adjust this based on your footer height */
+/*}
+
+main {
+    padding-bottom: 40px;*/ /* Extra breathing room for buttons */
+/*}*/
+
+/* Optional: Make the footer stay at the bottom but not cover content */
+/*.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px;*/ /* Consistent height */
+    /*line-height: 60px;
+}*/
+
+/* ===============================
+   BVICAM ERP – Student Grievance
+   =============================== */
+
+/* ===== ROOT COLORS ===== */
+:root {
+    --bvicam-blue: #0b3c6f; /* Institute Blue */
+    --bvicam-light-blue: #1f6fb2; /* Navbar Gradient */
+    --bvicam-red: #c62828; /* Alerts / Logout */
+    --bvicam-bg: #f4f7fb; /* Page Background */
+    --text-dark: #212529;
+}
+
+/* ===== BASE RESET ===== */
+html {
+    min-height: 100%;
+}
+
+body {
+    background-color: var(--bvicam-bg);
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-dark);
+    margin-bottom: 80px; /* Footer safe space */
+}
+
+/* ===============================
+   TOP ERP STRIP
+   =============================== */
+.erp-top-bar {
+    background-color: var(--bvicam-blue);
+    padding: 6px 16px;
+}
+
+/* ===============================
+   INSTITUTE HEADER
+   =============================== */
+.bvicam-header {
+    background-color: #ffffff;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.bvicam-logo {
+    height: 70px;
+}
+
+/* ===============================
+   ANNOUNCEMENT BAR
+   =============================== */
+.announcement-bar {
+    background-color: var(--bvicam-red);
+    color: #ffffff;
+    font-size: 0.9rem;
+    padding: 6px 0;
+}
+
+/* ===============================
+   NAVBAR
+   =============================== */
+.bvicam-navbar {
+    background: linear-gradient( 90deg, var(--bvicam-blue), var(--bvicam-light-blue) );
+}
+
+.navbar-brand {
+    letter-spacing: -0.5px;
+    font-weight: 600;
+}
+
+.navbar-dark .nav-link {
+    color: #eaf2ff !important;
+}
+
+    .navbar-dark .nav-link:hover {
+        color: #ffffff !important;
+    }
+
+/* ===============================
+   HERO SECTION
+   =============================== */
+.hero-section {
+    background: linear-gradient( 180deg, #eaf2ff 0%, #f8f9fa 100% );
+    padding: 60px 0;
+}
+
+    .hero-section .card {
+        max-width: 900px;
+        margin: auto;
+        border-radius: 16px;
+    }
+
+/* ===============================
+   CARDS
+   =============================== */
+.card {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+    }
+
+/* ===============================
+   FEATURE ICONS
+   =============================== */
+.feature-icon {
+    font-size: 2rem;
+    color: var(--bvicam-blue);
+    margin-bottom: 10px;
+}
+
+/* ===============================
+   STATUS BORDER CARDS
+   =============================== */
+.border-left-primary {
+    border-left: 5px solid var(--bvicam-blue) !important;
+}
+
+.border-left-danger {
+    border-left: 5px solid var(--bvicam-red) !important;
+}
+
+.border-left-success {
+    border-left: 5px solid #198754 !important;
+}
+
+/* ===============================
+   BUTTONS
+   =============================== */
+.btn-primary {
+    background-color: var(--bvicam-blue);
+    border-color: var(--bvicam-blue);
+}
+
+    .btn-primary:hover {
+        background-color: #082f55;
+        border-color: #082f55;
+    }
+
+.btn-danger {
+    background-color: var(--bvicam-red);
+    border-color: var(--bvicam-red);
+}
+
+    .btn-danger:hover {
+        background-color: #a61f1f;
+        border-color: #a61f1f;
+    }
+
+/* ===============================
+   FORMS
+   =============================== */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--bvicam-light-blue);
+    box-shadow: 0 0 0 0.15rem rgba(31, 111, 178, 0.25);
+}
+
+/* ===============================
+   MAIN CONTENT
+   =============================== */
+main {
+    padding-bottom: 40px;
+}
+
+/* ===============================
+   FOOTER
+   =============================== */
+.bvicam-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    background-color: #ffffff;
+    border-top: 1px solid #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    color: #555;
+    z-index: 1030;
+}
+
+/* ===============================
+   MOBILE RESPONSIVENESS
+   =============================== */
+@media (max-width: 768px) {
+
+    /* Header spacing */
+    .bvicam-header {
+        padding: 10px 12px;
+    }
+
+    .bvicam-logo {
+        height: 55px;
+    }
+
+    /* Navbar logo */
+    .navbar-logo {
+        height: 28px;
+    }
+
+    /* Reduce hero padding */
+    .hero-section {
+        padding: 30px 10px;
+    }
+
+    /* Card spacing */
+    .card {
+        margin-bottom: 16px;
+    }
+
+    /* Navbar items spacing */
+    .navbar-nav .nav-link {
+        padding: 8px 12px;
+    }
+}
+
+/* Navbar logo default size (desktop) */
+.navbar-logo {
+    height: 32px;
+}

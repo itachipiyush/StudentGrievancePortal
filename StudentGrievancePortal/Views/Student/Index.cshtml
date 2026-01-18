@@ -1,0 +1,188 @@
+﻿@* @model IEnumerable<StudentGrievancePortal.Models.Grievance>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>My Submitted Grievances</h2>
+        <a asp-action="Create" class="btn btn-success">+ Submit New Grievance</a>
+    </div>
+
+    <table class="table table-hover shadow-sm border">
+        <thead class="table-dark">
+            <tr>
+                <th>Ticket #</th>
+                <th>Subject</th>
+                <th>Status</th>
+                <th>Submitted On</th>
+                <th>Resolution</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><strong>@item.TicketNumber</strong></td>
+                    <td>@item.Subject</td>
+                    <td>
+                        @{
+                            var badgeClass = item.Status == "Resolved" ? "bg-success" :
+                            item.Status == "Under Review" ? "bg-warning" : "bg-primary";
+                        }
+                        <span class="badge @badgeClass">@item.Status</span>
+                    </td>
+                    <td>@item.CreatedAt.ToString("dd MMM yyyy")</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.ResolutionDetails))
+                        {
+                            <small class="text-muted">@item.ResolutionDetails</small>
+                        }
+                        else
+                        {
+                            <span class="fst-italic text-muted">Awaiting Response</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div> *@
+
+@model IEnumerable<StudentGrievancePortal.Models.Grievance>
+@using System.Text.Encodings.Web
+
+@{
+    ViewData["Title"] = "My Grievances";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary fw-bold"><i class="bi bi-list-check"></i> My Submitted Grievances</h2>
+        <a asp-action="Create" class="btn btn-success shadow-sm">
+            <i class="bi bi-plus-circle"></i> Submit New Grievance
+        </a>
+    </div>
+
+    <div class="row mb-3 g-3">
+        <div class="col-md-8">
+            <div class="input-group shadow-sm">
+                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+                <input type="text" id="searchInput" class="form-control border-start-0" placeholder="Search by Ticket # or Subject..." onkeyup="filterTable()">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <select id="statusFilter" class="form-select shadow-sm" onchange="filterTable()">
+                <option value="">All Statuses</option>
+                <option value="Submitted">Submitted</option>
+                <option value="Under Review">Under Review</option>
+                <option value="Resolved">Resolved</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="grievanceTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th class="ps-3">Ticket #</th>
+                        <th>Subject</th>
+                        <th>Status</th>
+                        <th>Submitted On</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-3"><strong>@item.TicketNumber</strong></td>
+                            <td>@item.Subject</td>
+                            <td>
+                                @{
+                                    var badgeClass = item.Status == "Resolved" ? "bg-success" :
+                                    item.Status == "Under Review" ? "bg-warning text-dark" : "bg-primary";
+                                }
+                                <span class="badge rounded-pill @badgeClass status-text">@item.Status</span>
+                            </td>
+                            <td>@item.CreatedAt.ToString("dd MMM yyyy")</td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-outline-info btn-sm shadow-sm"
+                                        onclick="openGrievanceModal('@item.Subject',
+                                                                        '@JavaScriptEncoder.Default.Encode(item.Description)',
+                                                                        '@JavaScriptEncoder.Default.Encode(item.ResolutionDetails ?? "Pending response from Coordinator.")')">
+                                    <i class="bi bi-eye"></i> View Details
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="noResults" class="text-center py-4 d-none">
+        <i class="bi bi-search text-muted" style="font-size: 2rem;"></i>
+        <p class="text-muted">No matching grievances found.</p>
+    </div>
+</div>
+
+<div class="modal fade" id="grievanceDetailsModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="modalLabel">Grievance Information</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="mb-4">
+                    <label class="fw-bold text-muted small text-uppercase">Grievance Description</label>
+                    <p id="displayDescription" class="p-3 bg-light rounded border mt-1" style="white-space: pre-wrap;"></p>
+                </div>
+                <div>
+                    <label class="fw-bold text-muted small text-uppercase">Coordinator's Resolution</label>
+                    <div id="displayResolution" class="p-3 bg-light rounded border border-success mt-1 text-success"></div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function filterTable() {
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value.toLowerCase();
+            const table = document.getElementById('grievanceTable');
+            const rows = table.getElementsByTagName('tr');
+            let visibleCount = 0;
+
+            for (let i = 1; i < rows.length; i++) {
+                const ticketCell = rows[i].getElementsByTagName('td')[0].innerText.toLowerCase();
+                const subjectCell = rows[i].getElementsByTagName('td')[1].innerText.toLowerCase();
+                const statusCell = rows[i].querySelector('.status-text').innerText.toLowerCase();
+
+                const matchesSearch = ticketCell.includes(searchText) || subjectCell.includes(searchText);
+                const matchesStatus = statusFilter === "" || statusCell === statusFilter;
+
+                if (matchesSearch && matchesStatus) {
+                    rows[i].style.display = "";
+                    visibleCount++;
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+
+            // Show "No Results" message if visibleCount is 0
+            document.getElementById('noResults').classList.toggle('d-none', visibleCount > 0);
+        }
+
+        function openGrievanceModal(subject, description, resolution) {
+            document.getElementById('modalLabel').innerText = subject;
+            document.getElementById('displayDescription').innerText = description;
+            document.getElementById('displayResolution').innerText = resolution;
+            var myModal = new bootstrap.Modal(document.getElementById('grievanceDetailsModal'));
+            myModal.show();
+        }
+    </script>
+}
