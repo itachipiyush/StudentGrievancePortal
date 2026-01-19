@@ -20,7 +20,7 @@ public class Grievance
     public string Status { get; set; } = "Submitted";
     public string Priority { get; set; } = "Medium";
 
-    public int StudentId { get; set; } // The actual FK to the student
+    public int StudentId { get; set; } 
 
     public int AssignedDeptId { get; set; }
     [ForeignKey("AssignedDeptId")]

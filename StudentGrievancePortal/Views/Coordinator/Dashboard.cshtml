@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "Coordinator Dashboard";
 
-    // Pre-calculate counts for the filter dropdown
     var totalCount = Model.Count();
     var highCount = Model.Count(g => g.Priority == "High");
     var mediumCount = Model.Count(g => g.Priority == "Medium");
@@ -33,17 +32,13 @@
     <div class="row" id="grievanceGrid">
         @foreach (var item in Model)
         {
-            // Logic handled directly inside the foreach (no nested @{ })
             var isHigh = item.Priority == "High";
             var isMedium = item.Priority == "Medium";
 
-            // Priority Color Mapping
             var priorityColor = isHigh ? "danger" : (isMedium ? "warning" : "info");
 
-            // Border Color Mapping - FIXED to show Yellow for Medium
             var borderClass = isHigh ? "border-danger" : (isMedium ? "border-warning" : "border-info");
 
-            // Status Color Mapping
             var statusClass = item.Status == "Resolved" ? "bg-success" : "bg-warning text-dark";
 
             <div class="col-md-6 mb-4 grievance-card" data-priority="@item.Priority">

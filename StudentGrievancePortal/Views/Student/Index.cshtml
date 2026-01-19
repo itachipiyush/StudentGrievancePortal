@@ -1,52 +1,4 @@
-﻿@* @model IEnumerable<StudentGrievancePortal.Models.Grievance>
-
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>My Submitted Grievances</h2>
-        <a asp-action="Create" class="btn btn-success">+ Submit New Grievance</a>
-    </div>
-
-    <table class="table table-hover shadow-sm border">
-        <thead class="table-dark">
-            <tr>
-                <th>Ticket #</th>
-                <th>Subject</th>
-                <th>Status</th>
-                <th>Submitted On</th>
-                <th>Resolution</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td><strong>@item.TicketNumber</strong></td>
-                    <td>@item.Subject</td>
-                    <td>
-                        @{
-                            var badgeClass = item.Status == "Resolved" ? "bg-success" :
-                            item.Status == "Under Review" ? "bg-warning" : "bg-primary";
-                        }
-                        <span class="badge @badgeClass">@item.Status</span>
-                    </td>
-                    <td>@item.CreatedAt.ToString("dd MMM yyyy")</td>
-                    <td>
-                        @if (!string.IsNullOrEmpty(item.ResolutionDetails))
-                        {
-                            <small class="text-muted">@item.ResolutionDetails</small>
-                        }
-                        else
-                        {
-                            <span class="fst-italic text-muted">Awaiting Response</span>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div> *@
-
-@model IEnumerable<StudentGrievancePortal.Models.Grievance>
+﻿@model IEnumerable<StudentGrievancePortal.Models.Grievance>
 @using System.Text.Encodings.Web
 
 @{
@@ -173,7 +125,6 @@
                 }
             }
 
-            // Show "No Results" message if visibleCount is 0
             document.getElementById('noResults').classList.toggle('d-none', visibleCount > 0);
         }
 

@@ -39,8 +39,6 @@ namespace StudentGrievancePortal.Controllers
             ViewBag.Departments = new SelectList(_context.Departments, "DeptId", "DeptName");
             return View();
         }
-
-        // Action to handle form submission
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Grievance grievance)
