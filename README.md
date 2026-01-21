@@ -1,42 +1,63 @@
-# StudentGrievancePortal
+# GrievanceERP Database Setup
 
-#Connection with Code
-{
-    "Logging": {
-        "LogLevel": {
-            "Default": "Information",
-            "Microsoft.AspNetCore": "Warning"
-        }
-    },
-    "AllowedHosts": "*",
-    "ConnectionStrings": {
-        "DefaultConnection": "Server=PIYUSH\\SQLEXPRESS01;Database=GrievanceERP;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True"
-    }
-}
+This document explains the **database schema and setup** for the **Student Grievance Management System (GrievanceERP)** built using **MS SQL Server**. It includes database creation, table structures, relationships, and sample seed data.
 
-# SQL Queries to run for the DB
+---
+
+## 📌 Database Creation
+
+```sql
 CREATE DATABASE GrievanceERP;
 GO
 
 USE GrievanceERP;
 GO
+```
 
--- 1. Departments (Academic, Admin, Hostel, etc.)
+---
+
+## 📌 Tables Overview
+
+### 1️⃣ Departments Table
+
+Stores department information.
+
+```sql
 CREATE TABLE Departments (
     DeptId INT PRIMARY KEY IDENTITY(1,1),
     DeptName NVARCHAR(100) NOT NULL
 );
+```
 
--- 2. Roles
+---
+
+### 2️⃣ Roles Table
+
+Defines system roles.
+
+```sql
 CREATE TABLE Roles (
     RoleId INT PRIMARY KEY IDENTITY(1,1),
-    RoleName NVARCHAR(50) NOT NULL -- 'Student', 'Coordinator', 'Admin'
+    RoleName NVARCHAR(50) NOT NULL
 );
+```
 
--- 3. Users (Integrated with ERP logic)
+**Roles Used:**
+
+* Student
+* Coordinator
+* Admin
+
+---
+
+### 3️⃣ Users Table
+
+Stores login and profile details of users.
+
+```sql
 CREATE TABLE Users (
     UserId INT PRIMARY KEY IDENTITY(1,1),
-    ERP_Id NVARCHAR(50) UNIQUE NOT NULL, -- The Student's Roll No or Employee ID
+    ERP_Id NVARCHAR(50) UNIQUE NOT NULL,
     FullName NVARCHAR(100) NOT NULL,
     Email NVARCHAR(100) UNIQUE NOT NULL,
     PasswordHash NVARCHAR(MAX) NOT NULL,
@@ -44,44 +65,105 @@ CREATE TABLE Users (
     DeptId INT FOREIGN KEY REFERENCES Departments(DeptId),
     CreatedDate DATETIME DEFAULT GETDATE()
 );
+```
 
--- 4. Grievances (The Core Table)
+---
+
+### 4️⃣ Grievances Table
+
+Stores grievance details submitted by students.
+
+```sql
 CREATE TABLE Grievances (
     GrievanceId INT PRIMARY KEY IDENTITY(1,1),
-    TicketNumber AS ('GRV-' + CAST(GrievanceId AS NVARCHAR(10))), -- Auto-generated Ticket ID
+    TicketNumber AS ('GRV-' + CAST(GrievanceId AS NVARCHAR(10))),
     Subject NVARCHAR(200) NOT NULL,
     Description NVARCHAR(MAX) NOT NULL,
-    
-    -- Status Management
-    Status NVARCHAR(50) DEFAULT 'Submitted', -- 'Submitted', 'Under Review', 'Resolved', 'Closed'
-    Priority NVARCHAR(20) DEFAULT 'Medium', -- 'Low', 'Medium', 'High'
-    
-    -- Accountability
-    StudentId INT FOREIGN KEY REFERENCES Users(UserId), -- System knows who, but CC won't see this
-    AssignedDeptId INT FOREIGN KEY REFERENCES Departments(DeptId), -- Routes to correct CC
-    
-    -- Tracking
-    ResolutionDetails NVARCHAR(MAX) NULL, -- Filled by CC when resolving
+    Status NVARCHAR(50) DEFAULT 'Submitted',
+    Priority NVARCHAR(20) DEFAULT 'Medium',
+    StudentId INT FOREIGN KEY REFERENCES Users(UserId),
+    AssignedDeptId INT FOREIGN KEY REFERENCES Departments(DeptId),
+    ResolutionDetails NVARCHAR(MAX) NULL,
     CreatedAt DATETIME DEFAULT GETDATE(),
     UpdatedAt DATETIME DEFAULT GETDATE()
 );
+```
 
--- 5. Seed Initial Data
-INSERT INTO Roles (RoleName) VALUES ('Student'), ('Coordinator'), ('Admin');
-INSERT INTO Departments (DeptName) VALUES ('Computer Science'), ('Mechanical'), ('Civil'), ('Accounts');
+---
 
--- Sample Users (Passwords are plain text for setup, but should be hashed in code)
-INSERT INTO Users (ERP_Id, FullName, Email, PasswordHash, RoleId, DeptId) 
+## 📌 Initial Seed Data
+
+### Insert Roles
+
+```sql
+INSERT INTO Roles (RoleName)
+VALUES ('Student'), ('Coordinator'), ('Admin');
+```
+
+### Insert Departments
+
+```sql
+INSERT INTO Departments (DeptName)
+VALUES ('Computer Science'), ('Mechanical'), ('Civil'), ('Accounts');
+```
+
+### Insert Users
+
+```sql
+INSERT INTO Users (ERP_Id, FullName, Email, PasswordHash, RoleId, DeptId)
 VALUES ('STU001', 'John Doe', 'student@college.edu', '123', 1, 1),
        ('CC001', 'Prof. Smith', 'coordinator@college.edu', '123', 2, 1);
+```
 
-
-Select * from Grievances;
-Select * from Users;
-
-INSERT INTO Users (ERP_Id, FullName, Email, PasswordHash, RoleId, DeptId) 
+```sql
+INSERT INTO Users (ERP_Id, FullName, Email, PasswordHash, RoleId, DeptId)
 VALUES ('CC003', 'Dr.Saumya', 'coordinator3@college.edu', '123', 2, 3);
+```
 
+```sql
+INSERT INTO Users (ERP_Id, FullName, Email, PasswordHash, RoleId, DeptId)
+VALUES ('STU002', 'Piyush Jha', 'piyush@bvicam.in', '123', 1, 2);
+```
 
+---
 
+## 📌 Data Updates
 
+### Update Department Name
+
+```sql
+UPDATE Departments
+SET DeptName = 'ECE'
+WHERE DeptId = 4;
+```
+
+### Update User Name
+
+```sql
+UPDATE Users
+SET FullName = 'Prof. Sunil'
+WHERE ERP_Id = 'CC001';
+```
+
+---
+
+## 📌 Sample Queries
+
+```sql
+SELECT * FROM Grievances;
+SELECT * FROM Users;
+SELECT * FROM Departments;
+```
+
+---
+
+## ✅ Notes
+
+* `TicketNumber` is auto-generated (e.g., `GRV-1`, `GRV-2`)
+* Foreign keys ensure role-based and department-based access
+* Designed for integration with **ASP.NET MVC / .NET Core** backend
+
+---
+
+**Author:** Piyush Jha
+**Project:** Institutional Grievance Redressal System
