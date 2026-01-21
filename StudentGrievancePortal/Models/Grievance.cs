@@ -20,9 +20,10 @@ public class Grievance
     public string Status { get; set; } = "Submitted";
     public string Priority { get; set; } = "Medium";
 
-    public int StudentId { get; set; } 
+    public int? StudentId { get; set; } 
+    public User? Student {  get; set; }
 
-    public int AssignedDeptId { get; set; }
+    public int? AssignedDeptId { get; set; }
     [ForeignKey("AssignedDeptId")]
     public Department? Department { get; set; }
 

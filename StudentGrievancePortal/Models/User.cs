@@ -9,6 +9,7 @@ public class User
     public int UserId { get; set; }
     public string ERP_Id { get; set; } = string.Empty;
     public string FullName { get; set; } = string.Empty;
+    [EmailAddress]
     public string Email { get; set; } = string.Empty;
     public string PasswordHash { get; set; } = string.Empty;
 
@@ -19,4 +20,6 @@ public class User
     public int DeptId { get; set; }
     [ForeignKey("DeptId")]
     public Department? Department { get; set; }
+    public DateTime CreatedDate { get; set; } = DateTime.Now;
+
 }
