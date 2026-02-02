@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace StudentGrievancePortal.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialSchema : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -98,6 +100,34 @@ namespace StudentGrievancePortal.Migrations
                         column: x => x.StudentId,
                         principalTable: "Users",
                         principalColumn: "UserId");
+                });
+
+            migrationBuilder.InsertData(
+                table: "Departments",
+                columns: new[] { "DeptId", "DeptName" },
+                values: new object[,]
+                {
+                    { 1, "MCA" },
+                    { 2, "BA(JMC)" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "RoleId", "RoleName" },
+                values: new object[,]
+                {
+                    { 1, "Student" },
+                    { 2, "Coordinator" },
+                    { 3, "Admin" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "UserId", "CreatedDate", "DeptId", "ERP_Id", "Email", "FullName", "PasswordHash", "RoleId" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2026, 2, 2, 13, 31, 31, 881, DateTimeKind.Local).AddTicks(7333), 1, "STU001", "student@college.edu", "Student1", "123", 1 },
+                    { 2, new DateTime(2026, 2, 2, 13, 31, 31, 881, DateTimeKind.Local).AddTicks(7395), 1, "CC001", "coordinator@college.edu", "Prof. 1", "123", 2 }
                 });
 
             migrationBuilder.CreateIndex(

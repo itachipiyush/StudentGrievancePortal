@@ -12,8 +12,8 @@ using StudentGrievancePortal.Data;
 namespace StudentGrievancePortal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260121110550_InitialSchema")]
-    partial class InitialSchema
+    [Migration("20260202080135_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,6 +40,18 @@ namespace StudentGrievancePortal.Migrations
                     b.HasKey("DeptId");
 
                     b.ToTable("Departments");
+
+                    b.HasData(
+                        new
+                        {
+                            DeptId = 1,
+                            DeptName = "MCA"
+                        },
+                        new
+                        {
+                            DeptId = 2,
+                            DeptName = "BA(JMC)"
+                        });
                 });
 
             modelBuilder.Entity("StudentGrievancePortal.Models.Grievance", b =>
@@ -118,6 +130,23 @@ namespace StudentGrievancePortal.Migrations
                     b.HasKey("RoleId");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            RoleId = 1,
+                            RoleName = "Student"
+                        },
+                        new
+                        {
+                            RoleId = 2,
+                            RoleName = "Coordinator"
+                        },
+                        new
+                        {
+                            RoleId = 3,
+                            RoleName = "Admin"
+                        });
                 });
 
             modelBuilder.Entity("StudentGrievancePortal.Models.User", b =>
@@ -168,6 +197,30 @@ namespace StudentGrievancePortal.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1,
+                            CreatedDate = new DateTime(2026, 2, 2, 13, 31, 31, 881, DateTimeKind.Local).AddTicks(7333),
+                            DeptId = 1,
+                            ERP_Id = "STU001",
+                            Email = "student@college.edu",
+                            FullName = "Student1",
+                            PasswordHash = "123",
+                            RoleId = 1
+                        },
+                        new
+                        {
+                            UserId = 2,
+                            CreatedDate = new DateTime(2026, 2, 2, 13, 31, 31, 881, DateTimeKind.Local).AddTicks(7395),
+                            DeptId = 1,
+                            ERP_Id = "CC001",
+                            Email = "coordinator@college.edu",
+                            FullName = "Prof. 1",
+                            PasswordHash = "123",
+                            RoleId = 2
+                        });
                 });
 
             modelBuilder.Entity("StudentGrievancePortal.Models.Grievance", b =>

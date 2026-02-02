@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using StudentGrievancePortal.Models;
 
 namespace StudentGrievancePortal.Data
@@ -26,6 +27,7 @@ namespace StudentGrievancePortal.Data
                 .Property(u => u.CreatedDate)
                 .HasDefaultValueSql("GETDATE()");
 
+           
             modelBuilder.Entity<Grievance>()
                 .Property(g => g.TicketNumber)
                 .HasComputedColumnSql("'GRV-' + CAST([GrievanceId] AS NVARCHAR(10))");
@@ -45,9 +47,25 @@ namespace StudentGrievancePortal.Data
             modelBuilder.Entity<Grievance>()
                 .Property(g => g.UpdatedAt)
                 .HasDefaultValueSql("GETDATE()");
+
+            modelBuilder.Entity<User>()
+                .HasData(
+                new User { UserId = 1, ERP_Id = "STU001", FullName = "Student1", Email = "student@college.edu", PasswordHash = "123", RoleId = 1, DeptId = 1 },
+                new User { UserId = 2, ERP_Id = "CC001", FullName = "Prof. 1", Email = "coordinator@college.edu", PasswordHash = "123", RoleId = 2, DeptId = 1 }
+                );
+
+            modelBuilder.Entity<Role>()
+                .HasData(
+                new Role { RoleId = 1, RoleName = "Student" },
+                new Role { RoleId = 2, RoleName = "Coordinator" },
+                new Role { RoleId = 3, RoleName = "Admin" }
+                );
+
+            modelBuilder.Entity<Department>()
+                 .HasData(
+                new Department { DeptId = 1, DeptName = "MCA"},
+                new Department { DeptId = 2, DeptName = "BA(JMC)"}                
+                );
         }
-
-
-
     }
 }
