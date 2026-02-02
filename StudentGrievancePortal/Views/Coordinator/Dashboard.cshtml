@@ -3,110 +3,159 @@
 @{
     ViewData["Title"] = "Coordinator Dashboard";
 
+    var pendingCases = Model.Where(g => g.Status != "Resolved").ToList();
+    var resolvedCases = Model.Where(g => g.Status == "Resolved").ToList();
+
     var totalCount = Model.Count();
     var highCount = Model.Count(g => g.Priority == "High");
     var mediumCount = Model.Count(g => g.Priority == "Medium");
     var lowCount = Model.Count(g => g.Priority == "Low");
 }
 
+<style>
+    .pulsate-danger {
+        animation: pulse-red 2s infinite;
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+    }
+
+    @@keyframes pulse-red {
+        0% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+        }
+
+        70% {
+            transform: scale(1);
+            box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
+        }
+
+        100% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+        }
+    }
+
+    .sla-warning-text {
+        font-size: 0.7rem;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+        padding: 5px 10px;
+    }
+
+    .nav-tabs .nav-link {
+        color: #6c757d;
+        border: none;
+        padding: 12px 20px;
+        font-weight: 500;
+    }
+
+        .nav-tabs .nav-link.active {
+            color: #0d6efd !important;
+            font-weight: bold;
+            border-bottom: 3px solid #0d6efd !important;
+            background: transparent;
+        }
+</style>
+
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center border-bottom mb-4 pb-2">
-        <div>
+    <div class="row align-items-center border-bottom mb-4 pb-3">
+        <div class="col-lg-6">
             <h2 class="text-secondary"><i class="bi bi-clipboard-check"></i> Coordinator Dashboard</h2>
-            <p class="text-muted">Reviewing grievances for <strong>@Context.Session.GetString("UserName")</strong></p>
+            <p class="text-muted mb-0">Reviewing grievances for <strong>@Context.Session.GetString("UserName")</strong></p>
         </div>
 
-        <div class="col-md-4">
-            <div class="input-group shadow-sm">
-                <label class="input-group-text bg-white" for="ccPriorityFilter"><i class="bi bi-filter"></i></label>
-                <select id="ccPriorityFilter" class="form-select" onchange="filterDashboard()">
-                    <option value="">All Priorities (@totalCount)</option>
-                    <option value="High">High Priority (@highCount)</option>
-                    <option value="Medium">Medium Priority (@mediumCount)</option>
-                    <option value="Low">Low Priority (@lowCount)</option>
-                </select>
-            </div>
-        </div>
-    </div>
-
-    <div class="row" id="grievanceGrid">
-        @foreach (var item in Model)
-        {
-            var isHigh = item.Priority == "High";
-            var isMedium = item.Priority == "Medium";
-
-            var priorityColor = isHigh ? "danger" : (isMedium ? "warning" : "info");
-
-            var borderClass = isHigh ? "border-danger" : (isMedium ? "border-warning" : "border-info");
-
-            var statusClass = item.Status == "Resolved" ? "bg-success" : "bg-warning text-dark";
-
-            <div class="col-md-6 mb-4 grievance-card" data-priority="@item.Priority">
-                <div class="card shadow-sm border-start border-4 @borderClass h-100">
-                    <div class="card-header d-flex justify-content-between align-items-center bg-white border-bottom-0 pt-3">
-                        <span class="badge bg-dark">Ticket: @item.TicketNumber</span>
-                        <div class="d-flex gap-2">
-                            <span class="badge bg-@priorityColor @(item.Priority != "High" ? "text-dark" : "")">
-                                <i class="bi bi-flag-fill"></i> @item.Priority
-                            </span>
-                            <span class="badge @statusClass">@item.Status</span>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold text-primary">@item.Subject</h5>
-                        <p class="card-text text-dark">@item.Description</p>
-
-                        <div class="mt-3">
-                            <small class="text-muted">
-                                <i class="bi bi-calendar-event"></i> Submitted: @item.CreatedAt.ToString("g")
-                            </small>
-                        </div>
-                        <hr />
-
-                        @if (item.Status != "Resolved")
-                        {
-                            <form asp-action="Resolve" method="post" class="mt-2">
-                                <input type="hidden" name="id" value="@item.GrievanceId" />
-                                <div class="form-group mb-2">
-                                    <label class="small fw-bold text-uppercase text-muted">Resolution Action:</label>
-                                    <textarea name="resolutionDetails" class="form-control form-control-sm" rows="2" placeholder="Describe the action taken..." required></textarea>
-                                </div>
-                                <button type="submit" class="btn btn-primary btn-sm w-100 shadow-sm">
-                                    <i class="bi bi-check2-circle"></i> Mark as Resolved
-                                </button>
-                            </form>
-                        }
-                        else
-                        {
-                            <div class="p-2 bg-light rounded border border-success">
-                                <p class="small mb-0 text-success">
-                                    <strong><i class="bi bi-info-circle"></i> Resolved:</strong> @item.ResolutionDetails
-                                </p>
-                            </div>
-                        }
-                    </div>
+        <div class="col-lg-6 mt-3 mt-lg-0">
+            <div class="d-flex gap-2 justify-content-lg-end">
+                <div class="input-group shadow-sm" style="max-width: 250px;">
+                    <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                    <input type="text" id="dashboardSearch" class="form-control" placeholder="Ticket # or Subject..." onkeyup="filterDashboard()">
+                </div>
+                <div class="input-group shadow-sm" style="max-width: 250px;">
+                    <label class="input-group-text bg-white"><i class="bi bi-filter"></i></label>
+                    <select id="ccPriorityFilter" class="form-select" onchange="filterDashboard()">
+                        <option value="">All Priorities (@totalCount)</option>
+                        <option value="High">High (@highCount)</option>
+                        <option value="Medium">Medium (@mediumCount)</option>
+                        <option value="Low">Low (@lowCount)</option>
+                    </select>
                 </div>
             </div>
-        }
+        </div>
     </div>
 
-    <div id="ccNoResults" class="text-center mt-5 @(Model.Any() ? "d-none" : "")">
-        <i class="bi bi-inbox text-muted" style="font-size: 3rem;"></i>
-        <p class="text-muted mt-2">No matching grievances found.</p>
+    <ul class="nav nav-tabs mb-4 border-0" id="grievanceTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pendingPane" type="button" role="tab">
+                <i class="bi bi-hourglass-split"></i> Pending Cases (@pendingCases.Count)
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="resolved-tab" data-bs-toggle="tab" data-bs-target="#resolvedPane" type="button" role="tab">
+                <i class="bi bi-check-all"></i> Resolved History (@resolvedCases.Count)
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="grievanceTabsContent">
+        <div class="tab-pane fade show active" id="pendingPane" role="tabpanel">
+            <div class="row tab-grid" id="pendingGrid">
+                @if (!pendingCases.Any())
+                {
+                    <div class="text-center mt-5 py-5 border rounded bg-light no-data-msg">
+                        <i class="bi bi-emoji-smile text-success" style="font-size: 3rem;"></i>
+                        <p class="text-muted mt-2">All caught up! No pending grievances.</p>
+                    </div>
+                }
+                @foreach (var item in pendingCases)
+                {
+                    <partial name="_GrievanceCard" model="item" />
+                }
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="resolvedPane" role="tabpanel">
+            <div class="row tab-grid" id="resolvedGrid">
+                @if (!resolvedCases.Any())
+                {
+                    <div class="text-center mt-5 py-5 border rounded bg-light no-data-msg">
+                        <i class="bi bi-inbox text-muted" style="font-size: 3rem;"></i>
+                        <p class="text-muted mt-2">No resolved records found.</p>
+                    </div>
+                }
+                @foreach (var item in resolvedCases)
+                {
+                    <partial name="_GrievanceCard" model="item" />
+                }
+            </div>
+        </div>
+    </div>
+
+    <div id="ccNoResults" class="text-center mt-5 d-none">
+        <i class="bi bi-search text-muted" style="font-size: 3rem;"></i>
+        <p class="text-muted mt-2">No matches found in this section.</p>
     </div>
 </div>
 
 @section Scripts {
     <script>
         function filterDashboard() {
-            const filterValue = document.getElementById('ccPriorityFilter').value;
-            const cards = document.getElementsByClassName('grievance-card');
+            const priorityValue = document.getElementById('ccPriorityFilter').value;
+            const searchValue = document.getElementById('dashboardSearch').value.toLowerCase();
+
+            const activeTabPane = document.querySelector('.tab-pane.active');
+            const cards = activeTabPane.getElementsByClassName('grievance-card');
+
             let visibleCount = 0;
 
             for (let i = 0; i < cards.length; i++) {
                 const cardPriority = cards[i].getAttribute('data-priority');
+                const ticketText = cards[i].querySelector('.ticket-label').innerText.toLowerCase();
+                const subjectText = cards[i].querySelector('.subject-label').innerText.toLowerCase();
 
-                if (filterValue === "" || cardPriority === filterValue) {
+                const matchesPriority = (priorityValue === "" || cardPriority === priorityValue);
+                const matchesSearch = (searchValue === "" || ticketText.includes(searchValue) || subjectText.includes(searchValue));
+
+                if (matchesPriority && matchesSearch) {
                     cards[i].style.display = "";
                     visibleCount++;
                 } else {
@@ -114,12 +163,18 @@
                 }
             }
 
-            const noResults = document.getElementById('ccNoResults');
-            if(visibleCount > 0) {
-                noResults.classList.add('d-none');
+            const noResultsGlobal = document.getElementById('ccNoResults');
+            if (cards.length > 0 && visibleCount === 0) {
+                noResultsGlobal.classList.remove('d-none');
             } else {
-                noResults.classList.remove('d-none');
+                noResultsGlobal.classList.add('d-none');
             }
         }
+
+        document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(tabEl => {
+            tabEl.addEventListener('shown.bs.tab', () => {
+                filterDashboard();
+            });
+        });
     </script>
 }

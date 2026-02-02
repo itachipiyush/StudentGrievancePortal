@@ -3,6 +3,7 @@ using StudentGrievancePortal.Models;
 using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Http;
+using System;
 
 namespace StudentGrievancePortal.Controllers
 {
@@ -23,21 +24,31 @@ namespace StudentGrievancePortal.Controllers
             if (roleId == null || roleId != 2)
                 return RedirectToAction("Login", "Account");
 
-            var total = _context.Grievances.Count(g => g.AssignedDeptId == deptId);
-            var resolved = _context.Grievances.Count(g => g.Status == "Resolved" && g.AssignedDeptId == deptId);
-            var pending = _context.Grievances.Count(g => (g.Status == "Submitted" || g.Status == "Under Review") && g.AssignedDeptId == deptId);
-
-            var recentGrievances = _context.Grievances
+            var allGrievances = _context.Grievances
                 .Where(g => g.AssignedDeptId == deptId)
                 .OrderByDescending(g => g.CreatedAt)
-                .Take(5)
                 .ToList();
 
-            ViewBag.Total = total;
-            ViewBag.Resolved = resolved;
-            ViewBag.Pending = pending;
-            ViewBag.Recent = recentGrievances;
+            ViewBag.Total = allGrievances.Count;
+            ViewBag.Resolved = allGrievances.Count(g => g.Status == "Resolved");
+            ViewBag.Pending = allGrievances.Count(g => g.Status != "Resolved");
 
+            ViewBag.High = allGrievances.Count(g => g.Priority == "High");
+            ViewBag.Medium = allGrievances.Count(g => g.Priority == "Medium");
+            ViewBag.Low = allGrievances.Count(g => g.Priority == "Low");
+
+            var resolvedGrievances = allGrievances.Where(g => g.Status == "Resolved").ToList();
+            if (resolvedGrievances.Any())
+            {
+                var avgDays = resolvedGrievances.Average(g => (g.UpdatedAt - g.CreatedAt).TotalDays);
+                ViewBag.AvgSLA = Math.Round(avgDays, 1);
+            }
+            else
+            {
+                ViewBag.AvgSLA = 0;
+            }
+
+            ViewBag.Recent = allGrievances;
             return View();
         }
 
@@ -56,11 +67,14 @@ namespace StudentGrievancePortal.Controllers
 
             foreach (var item in data)
             {
-                string resolution = item.ResolutionDetails?.Replace("\"", "'") ?? "No resolution provided";
-                builder.AppendLine($"{item.TicketNumber},{item.Subject},{item.Status},{item.Priority},{item.CreatedAt:yyyy-MM-dd},\"{resolution}\"");
+                string resolution = item.ResolutionDetails?.Replace("\"", "'").Replace("\r\n", " ").Replace("\n", " ") ?? "No resolution provided";
+
+                string dateFormatted = item.CreatedAt.ToString("dd-MMM-yyyy");
+
+                builder.AppendLine($"{item.TicketNumber},{item.Subject},{item.Status},{item.Priority},{dateFormatted},\"{resolution}\"");
             }
 
-            string fileName = $"Grievance_Report_{DateTime.Now:yyyyMMdd}.csv";
+            string fileName = $"BVICAM_Grievance_Report_{DateTime.Now:yyyyMMdd}.csv";
             return File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", fileName);
         }
     }

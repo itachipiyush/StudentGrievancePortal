@@ -13,7 +13,7 @@
         </a>
     </div>
 
-    <div class="row mb-3 g-3">
+     <div class="row mb-3 g-3">
         <div class="col-md-8">
             <div class="input-group shadow-sm">
                 <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
@@ -28,7 +28,7 @@
                 <option value="Resolved">Resolved</option>
             </select>
         </div>
-    </div>
+    </div> 
 
     <div class="card shadow-sm border-0">
         <div class="table-responsive">
@@ -55,7 +55,7 @@
                                 }
                                 <span class="badge rounded-pill @badgeClass status-text">@item.Status</span>
                             </td>
-                            <td>@item.CreatedAt.ToString("dd MMM yyyy")</td>
+                            <td>@item.CreatedAt.ToString("g")</td>
                             <td class="text-center">
                                 <button type="button" class="btn btn-outline-info btn-sm shadow-sm"
                                         onclick="openGrievanceModal('@item.Subject',
