@@ -1,0 +1,48 @@
+[33mcommit 1f5728ff4ab6a8e39ae4fe639ddd82627124e26a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/db-migration[m[33m)[m
+Author: Mayank Sharma <4703mayank@gmail.com>
+Date:   Mon Feb 2 13:58:49 2026 +0530
+
+    Migration completed with defult User, Role and Department.
+
+[33mcommit ba5930c0b8d14bca1af726b8d056c33a1700c9e9[m
+Author: Mayank Sharma <4703mayank@gmail.com>
+Date:   Wed Jan 21 16:48:21 2026 +0530
+
+    Db migration done.
+
+[33mcommit 73873d9e09f623d527fbb29f57cc82bdd5d4a128[m[33m ([m[1;32mmaster[m[33m)[m
+Merge: 894c646 31ad042
+Author: Piyush <piyushjha.2312@gmail.com>
+Date:   Mon Jan 19 09:42:22 2026 +0530
+
+    Merge branch 'master' of https://github.com/itachipiyush/StudentGrievancePortal
+
+[33mcommit 894c6461ba0121353481120c617f84e3b9498496[m
+Author: Piyush <piyushjha.2312@gmail.com>
+Date:   Mon Jan 19 09:42:03 2026 +0530
+
+    changes ver-01
+
+[33mcommit 31ad0422dbd33af1960eff0b08a547dd1ec54daa[m
+Author: Piyush <104557468+itachipiyush@users.noreply.github.com>
+Date:   Sun Jan 18 17:27:24 2026 +0530
+
+    Update copyright year and name in LICENSE.txt
+
+[33mcommit 1dd8c0ba07b04c9690111aab045239dd285068e0[m
+Author: Piyush <104557468+itachipiyush@users.noreply.github.com>
+Date:   Sun Jan 18 17:26:40 2026 +0530
+
+    Add database connection details and SQL schema
+
+[33mcommit f357776955067904fad489dea8e072784dfd24d5[m
+Author: Piyush <piyushjha.2312@gmail.com>
+Date:   Sun Jan 18 17:23:45 2026 +0530
+
+    Add project files.
+
+[33mcommit 34aeb75e45e7cbc46572dc17493748615d2b8fe5[m
+Author: Piyush <piyushjha.2312@gmail.com>
+Date:   Sun Jan 18 17:23:40 2026 +0530
+
+    Add .gitattributes, .gitignore, README.md, and LICENSE.txt.
