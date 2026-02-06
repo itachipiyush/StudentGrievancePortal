@@ -4,7 +4,6 @@
 }
 
 <style>
-    /* Printing Logic: Hide UI, keep table */
     @@media print {
         .no-print, .navbar, .btn-group, .card-header, .stats-card, .list-group, #statusChart {
             display: none !important;
@@ -30,7 +29,6 @@
         }
     }
 
-    /* Professional UI Enhancements */
     .stats-icon {
         font-size: 2.2rem;
         opacity: 0.25;
@@ -46,7 +44,6 @@
             background-color: #f8f9fa;
         }
 
-    /* Active Filter State */
     .active-priority {
         background-color: #0d6efd !important;
         color: white !important;
@@ -198,7 +195,6 @@
     <script>
         let selectedPriority = "";
 
-        // Chart.js - Global closure rate
         new Chart(document.getElementById('statusChart'), {
             type: 'doughnut',
             data: {
@@ -208,7 +204,6 @@
             options: { cutout: '80%', plugins: { legend: { position: 'bottom', labels: { boxWidth: 12 } } } }
         });
 
-        // Priority Filter Trigger
         function setPriorityFilter(priority, element) {
             selectedPriority = priority;
             document.querySelectorAll('.priority-item').forEach(item => item.classList.remove('active-priority'));
@@ -216,7 +211,6 @@
             filterSummaryTable();
         }
 
-        // Master Filter Logic
         function filterSummaryTable() {
             const search = document.getElementById('summarySearch').value.toLowerCase();
             const startStr = document.getElementById('startDate').value;

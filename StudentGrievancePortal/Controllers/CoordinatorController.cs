@@ -18,8 +18,6 @@ namespace StudentGrievancePortal.Controllers
             var deptId = HttpContext.Session.GetInt32("UserDept");
             if (deptId == null) return RedirectToAction("Login", "Account");
 
-            // ANONYMITY LOGIC: We fetch grievances for this CC department
-            // but we DO NOT include any Student information in the query.
             var pendingGrievances = _context.Grievances
                 .Where(g => g.AssignedDeptId == deptId)
                 .OrderByDescending(g => g.CreatedAt)
