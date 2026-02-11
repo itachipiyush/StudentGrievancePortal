@@ -261,3 +261,43 @@ main {
         border-bottom: 3px solid var(--bvicam-blue) !important;
         font-weight: bold;
     }
+
+/* --- Add/Update this at the bottom of site.css --- */
+
+/* 1. Prevent page shift when modal opens */
+body.modal-open {
+    overflow: hidden !important;
+    padding-right: 0 !important;
+}
+
+/* 2. Optimized Pulsate Animation (Single definition) */
+@keyframes pulse-red {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(198, 40, 40, 0.7);
+    }
+
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 10px rgba(198, 40, 40, 0);
+    }
+
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(198, 40, 40, 0);
+    }
+}
+
+.pulsate-danger {
+    animation: pulse-red 2s infinite !important;
+}
+
+/* 3. Modal stability fixes */
+.modal {
+    z-index: 2000 !important; /* Higher than your footer and nav */
+    background-color: rgba(0, 0, 0, 0.4); /* Darker backdrop prevents white flash */
+}
+
+.modal-backdrop {
+    display: none !important; /* We use the modal's own background to stop flickering */
+}

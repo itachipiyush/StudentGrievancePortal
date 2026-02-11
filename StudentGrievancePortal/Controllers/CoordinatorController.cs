@@ -38,6 +38,7 @@ namespace StudentGrievancePortal.Controllers
 
                 _context.SaveChanges();
             }
+            TempData["SuccessMessage"] = "Grievance resolved successfully!";
             return RedirectToAction(nameof(Dashboard));
         }
     }
