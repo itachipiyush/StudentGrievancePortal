@@ -10,6 +10,8 @@ public class GrievanceContext : DbContext
     public DbSet<Role> Roles { get; set; }
     public DbSet<Department> Departments { get; set; }
     public DbSet<Grievance> Grievances { get; set; }
+    public DbSet<ChatMessage> ChatMessages { get; set; } // ADDED THIS LINE
+        
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
